@@ -140,8 +140,8 @@
         if (completedTasks < taskLimit) {
         completedTasks++;
         balance += 0.2; // Add 1 DGB per task
-        todayEarnings += 1;
-        lifetimeEarnings += 1;
+        todayEarnings += 0.2;
+        lifetimeEarnings += 0.2;
         lastTaskTime = Date.now(); // Update last task time
         
         localStorage.setItem("balance", balance);
