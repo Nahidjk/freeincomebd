@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .withdraw-section {
+            text-align: center;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 300px;
+        }
+        .withdraw-section h3 {
+            color: orange;
+            margin-bottom: 15px;
+        }
+        .withdraw-section input, .withdraw-section select {
+            width: 90%;
+            padding: 15px; /* Increased padding for larger input fields */
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 2px solid #555;
+            background-color: #333;
+            color: #fff;
+            font-size: 16px; /* Increased font size */
+        }
+        .withdraw-section input[type="number"] {
+            height: 10px; /* Set height of the number input */
+        }
+        .withdraw-section input[type="text"] {
+            height: 10px; /* Set height of the phone number input */
+        }
+        .withdraw-section select {
+            height: 50px; /* Set height of the select dropdown */
+        }
+        .withdraw-section button {
+            background-color: green;
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            margin-top: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .withdraw-section button:hover {
+            background-color: #006400;
+        }
+        #withdraw-status {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="withdraw-section">
+        <h3>Withdrawal Request</h3>
+        <input type="number" id="withdraw-amount" placeholder="Enter Points to Withdraw" />
+        <select id="payment-method">
+            <option value="bkash">Bkash</option>
+            <option value="nagad">Nagad</option>
+            <option value="manual">Manual</option>
+        </select>
+        <input type="text" id="withdraw-phone" placeholder="Enter Phone Number" />
+        <button onclick="withdrawPoints()">Withdraw</button>
+        <p id="withdraw-status"></p>
+    </div>
+    <script>
+        const MIN_WITHDRAW_POINTS = 5;
+        const ADMIN_USER_ID = 7694112804;
+        const BOT_TOKEN = "7474129750:AAHDOrtYnulZqB5V3CH2XaHR_02t_PVwi7M";
+        const telegramUserName = "@exampleUser";
+
+        function withdrawPoints() {
+            const amount = document.getElementById('withdraw-amount').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+            const phoneNumber = document.getElementById('withdraw-phone').value;
+
+            if (amount < MIN_WITHDRAW_POINTS) {
+                document.getElementById('withdraw-status').textContent = `Minimum withdrawal amount is ${MIN_WITHDRAW_POINTS} points.`;
+                return;
+            }
+
+            const message = `Withdrawal Request from ${telegramUserName}:\nAmount: ${amount} points\nPayment Method: ${paymentMethod}\nPhone Number: ${phoneNumber}`;
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${ADMIN_USER_ID}&text=${encodeURIComponent(message)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        document.getElementById('withdraw-status').textContent = 'Withdrawal request sent successfully!';
+                    } else {
+                        document.getElementById('withdraw-status').textContent = 'Error sending request.';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('withdraw-status').textContent = 'Error sending request.';
+                });
+        }
+    </script>
+</body>
+</html>
