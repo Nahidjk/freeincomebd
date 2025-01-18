@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads Button Example</title>
+</head>
+<body>
+
+    <!-- Ads Button -->
+    <button id="adsButton">Show Ad</button>
+
+    <!-- Script for Monetag -->
+    <script src="https://niphaumeenses.net/vignette.min.js" data-zone="8811435" data-sdk="show_8811435"></script>
+
+    <!-- Script to Show Ad on Button Click -->
+    <script>
+        document.getElementById('adsButton').addEventListener('click', function() {
+            // Trigger the ad to show when button is clicked
+            monetag.show(); 
+        });
+    </script>
+
+</body>
+</html>
