@@ -1,62 +1,188 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watch Ad Example</title>
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F4FAFF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 34px;
+            color: white;
+        }
+        h1 {
+            margin: 0 0 20px;
+            font-size: 28px;
+            color: black;
+        }
+        .balance {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: black;
+        }
+        .task-box, .earnings-box {
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: black;
+        }
+        .task-box h3, .earnings-box h3 {
+            margin: 0 0 10px;
+        }
+        .button {
+            background: #ff5722;
+            color: white;
+            padding: 10px 80px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .butto {
+        background: #ff5722;
+        color: white;
+        padding: 10px 100px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.3s;
+        }
+        .button:hover {
+            background: #e64a19;
+        }
+        .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Welcome Back, User!</h1>
+        <div class="balance" style="text-align: center;">💰 Balance: DGB <span id="balance">0.00</span></div>
 
-    <!-- Ads Button -->
-    <button id="adsButton">Show Ad</button>
-    <div>
-        <p>Watched Ads: <span id="watched-ads">0</span></p>
-        <p>Earned Points: <span id="earned-points">0.00</span></p>
-        <div id="progress-circle"></div>
+        <div class="task-box">
+            <h3 style="text-align: center;">Today's Tasks</h3>
+            <p><strong>Total Tasks:</strong> 25</p>
+            <p><strong>Completed:</strong> <span id="completedTasks">0</span></p>
+            <p><strong>Remaining:</strong> <span id="remainingTasks">25</span></p>
+            <button class="button" id="taskButton" onclick="completeTask()">Complete Task</button>
+            <p class="timer" id="timer"></p>
+            <button class="butto" onclick="goToWithdraw()">Withdraw</button>
+            
+        </div>
+
+        <div class="earnings-box">
+            <h3 style="text-align: center;">Earnings</h3>
+            <p><strong>Today's Earnings:</strong> DGB <span id="todayEarnings">0.00</span></p>
+            <p><strong>Lifetime Earnings:</strong> DGB <span id="lifetimeEarnings">0.00</span></p>
+        </div>
     </div>
+<script src="https://jagnaimsee.net/vignette.min.js" data-zone="8811435" data-sdk="show_8811435"></script>
 
-    <!-- Script for Monetag -->
-    <script src="https://jagnaimsee.net/vignette.min.js" data-zone="8811435" data-sdk="show_8811435"></script>
-
-    <!-- JavaScript for Ad Handling -->
     <script>
-        let watchedAdsCount = parseInt(localStorage.getItem('watchedAdsCount')) || 0;
-        let earnedPoints = parseFloat(localStorage.getItem('earnedPoints')) || 0;
+        let balance = parseFloat(localStorage.getItem("balance")) || 0;
+        let completedTasks = parseInt(localStorage.getItem("completedTasks")) || 0;
+        let todayEarnings = parseFloat(localStorage.getItem("todayEarnings")) || 0;
+        let lifetimeEarnings = parseFloat(localStorage.getItem("lifetimeEarnings")) || 0;
+        let lastTaskTime = parseInt(localStorage.getItem("lastTaskTime")) || 0;
 
-        // Update progress circle based on points
-        function updateProgressCircle() {
-            const progressCircle = document.getElementById('progress-circle');
-            const progress = (earnedPoints / 10) * 100; // Example: 10 points = 100%
-            progressCircle.style.width = progress + '%';
-            progressCircle.style.height = '20px';
-            progressCircle.style.backgroundColor = 'green';
-        }
+        const taskLimit = 25; // Max number of tasks for today
+        const now = new Date(); // Get the current date and time
+        const bangladeshTimeOffset = 6 * 60 * 60 * 1000; // Bangladesh time offset (UTC +6)
+        const bangladeshTime = new Date(now.getTime() + bangladeshTimeOffset);
 
-        // Function to watch the ad and process points
-        function watchAd() {
-            if (typeof show_8811435 === 'function') {
-                show_8811435().then(() => {
-                    // When the ad is shown, add points and increment counter
-                    watchedAdsCount++;
-                    document.getElementById('watched-ads').textContent = watchedAdsCount;
-                    earnedPoints += 0.50; // Add 0.50 points per ad watched
-                    document.getElementById('earned-points').textContent = earnedPoints.toFixed(2);
-                    localStorage.setItem('watchedAdsCount', watchedAdsCount);
-                    localStorage.setItem('earnedPoints', earnedPoints.toFixed(2));
+        // Midnight calculation (next midnight at 12:00 AM)
+        const nextMidnight = new Date(bangladeshTime);
+        nextMidnight.setHours(24, 0, 0, 0);
+        const remainingTime = nextMidnight - bangladeshTime; // Time remaining until midnight
 
-                    // Update progress circle
-                    updateProgressCircle();
-                }).catch((error) => {
-                    console.error("Ad failed to load: ", error);
-                });
+        document.getElementById("balance").textContent = balance.toFixed(2);
+        document.getElementById("completedTasks").textContent = completedTasks;
+        document.getElementById("remainingTasks").textContent = taskLimit - completedTasks;
+        document.getElementById("todayEarnings").textContent = todayEarnings.toFixed(2);
+        document.getElementById("lifetimeEarnings").textContent = lifetimeEarnings.toFixed(2);
+
+        // Show countdown timer to midnight in Bangladesh time
+        function updateTimer() {
+            const timeRemaining = remainingTime - (new Date() - bangladeshTime);
+            if (timeRemaining > 0) {
+                const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                document.getElementById("timer").textContent = `Next task available in: ${hours}h ${minutes}m ${seconds}s`;
+                setTimeout(updateTimer, 1000); // Update every second
             } else {
-                console.error("show_8811435 function is not available");
+                document.getElementById("timer").textContent = "New tasks available!";
             }
         }
 
+        // Function to complete task
+        function completeTask() {
+        if (completedTasks < taskLimit) {
+        completedTasks++;
+        balance += 1; // Add 1 DGB per task
+        todayEarnings += 1;
+        lifetimeEarnings += 1;
+        lastTaskTime = Date.now(); // Update last task time
+        
+        localStorage.setItem("balance", balance);
+        localStorage.setItem("completedTasks", completedTasks);
+        localStorage.setItem("todayEarnings", todayEarnings);
+        localStorage.setItem("lifetimeEarnings", lifetimeEarnings);
+        localStorage.setItem("lastTaskTime", lastTaskTime);
+        
+        document.getElementById("balance").textContent = balance.toFixed(2);
+        document.getElementById("completedTasks").textContent = completedTasks;
+        document.getElementById("remainingTasks").textContent = taskLimit - completedTasks;
+        document.getElementById("todayEarnings").textContent = todayEarnings.toFixed(2);
+        
+        if (completedTasks >= taskLimit) {
+        document.getElementById("taskButton").style.display = "none"; // Hide task button after task limit is reached
+        // Start the timer after completing 25 tasks
+        updateTimer(); // Start countdown
+        }
+        
+        // Call watchAd after completing a task if the task limit is not reached
+        watchAd();
+        } else {
+        alert("All tasks completed for today!");
+        }
+        }
+        
+        function watchAd() {
+        if (typeof show_8811435 === 'function') {
+        show_8811435().then(() => {
+        console.log("Ad shown successfully.");
+        }).catch((error) => {
+        console.error("Ad failed to load: ", error);
+        });
+        } else {
+        console.error("show_8811435 function is not available");
+        }
+        }
+        
         // Button click event to show ad
         document.getElementById('adsButton').addEventListener('click', watchAd);
+        
     </script>
-
 </body>
 </html>
