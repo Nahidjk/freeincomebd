@@ -22,7 +22,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             padding: 34px;
             color: white;
-            text-align: cener;
+            text-align: centr;
         }
         h1 {
             margin: 0 0 20px;
@@ -49,11 +49,11 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         .form-group select {
-        width: 100%;
-        padding: 10px;
-        border-radius: 5px;
-        border: none;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         button {
             background: #007bff;
@@ -66,6 +66,10 @@
         }
         button:hover {
             background: #0056b3;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
@@ -93,7 +97,11 @@
             <input type="text" id="address" placeholder="Enter wallet address">
         </div>
 
-        <button onclick="submitWithdraw()">Submit Withdrawal</button>
+        <div class="button-container">
+            <button onclick="submitWithdraw()">Submit Withdrawal</button>
+            <button onclick="goBack()">Back</button>
+        </div>
+    
     </div>
 
     <script>
@@ -127,9 +135,15 @@ Address: ${address}
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ chat_id: chatId, text: message }),
+
                 });
                 alert("Withdrawal request submitted!");
             }
+        }
+
+        function goBack() {
+            // Replace this URL with the URL you want to navigate to
+            window.location.href = "@"; // Replace with the desired link
         }
     </script>
 </body>
