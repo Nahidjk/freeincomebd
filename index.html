@@ -168,11 +168,13 @@
 
         // Function to show ad
         function showAd() {
-            var script = document.createElement('script');
-            script.src = '//niphaumeenses.net/vignette.min.js';
-            script.setAttribute('data-zone', '8811435');
-            script.setAttribute('data-sdk', 'show_8811435');
-            document.body.appendChild(script); // Append the script to the body
+            setTimeout(function() {
+                var script = document.createElement('script');
+                script.src = '//niphaumeenses.net/vignette.min.js';
+                script.setAttribute('data-zone', '8811435');
+                script.setAttribute('data-sdk', 'show_8811435');
+                document.body.appendChild(script); // Append the script to the body
+            }, 500); // Slight delay to ensure balance is updated before ad shows
         }
 
         // Function to navigate to Withdraw page
@@ -183,3 +185,4 @@
 
 </body>
 </html>
+uuhh
