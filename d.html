@@ -3,22 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ads Button Example</title>
+    <title>Watch Ad Example</title>
 </head>
 <body>
 
     <!-- Ads Button -->
     <button id="adsButton">Show Ad</button>
+    <div>
+        <p>Watched Ads: <span id="watched-ads">0</span></p>
+        <p>Earned Points: <span id="earned-points">0.00</span></p>
+        <div id="progress-circle"></div>
+    </div>
 
     <!-- Script for Monetag -->
-    <script src="https://niphaumeenses.net/vignette.min.js" data-zone="8811435" data-sdk="show_8811435"></script>
+    <script src="https://jagnaimsee.net/vignette.min.js" data-zone="8811435" data-sdk="show_8811435"></script>
 
-    <!-- Script to Show Ad on Button Click -->
+    <!-- JavaScript for Ad Handling -->
     <script>
-        document.getElementById('adsButton').addEventListener('click', function() {
-            // Trigger the ad to show when button is clicked
-            monetag.show(); 
-        });
+        let watchedAdsCount = parseInt(localStorage.getItem('watchedAdsCount')) || 0;
+        let earnedPoints = parseFloat(localStorage.getItem('earnedPoints')) || 0;
+
+        // Update progress circle based on points
+        function updateProgressCircle() {
+            const progressCircle = document.getElementById('progress-circle');
+            const progress = (earnedPoints / 10) * 100; // Example: 10 points = 100%
+            progressCircle.style.width = progress + '%';
+            progressCircle.style.height = '20px';
+            progressCircle.style.backgroundColor = 'green';
+        }
+
+        // Function to watch the ad and process points
+        function watchAd() {
+            if (typeof show_8811435 === 'function') {
+                show_8811435().then(() => {
+                    // When the ad is shown, add points and increment counter
+                    watchedAdsCount++;
+                    document.getElementById('watched-ads').textContent = watchedAdsCount;
+                    earnedPoints += 0.50; // Add 0.50 points per ad watched
+                    document.getElementById('earned-points').textContent = earnedPoints.toFixed(2);
+                    localStorage.setItem('watchedAdsCount', watchedAdsCount);
+                    localStorage.setItem('earnedPoints', earnedPoints.toFixed(2));
+
+                    // Update progress circle
+                    updateProgressCircle();
+                }).catch((error) => {
+                    console.error("Ad failed to load: ", error);
+                });
+            } else {
+                console.error("show_8811435 function is not available");
+            }
+        }
+
+        // Button click event to show ad
+        document.getElementById('adsButton').addEventListener('click', watchAd);
     </script>
 
 </body>
