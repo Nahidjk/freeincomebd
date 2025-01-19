@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F4FAFF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            flex-direction: column;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 30px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .balance {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .task-box {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 80px rgba(9, 0, 0, 0.1);
+        }
+        .task-box h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 80px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #666;
+        }
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome Back</h1>
+        <div class="balance">💰 Balance: DGB <span id="balance">0.00</span></div>
+        <div class="task-box">
+            <h3>Today's Tasks</h3>
+            <p><strong>Total Tasks:</strong> 25</p>
+            <p><strong>Completed:</strong> <span id="completedTasks">0</span></p>
+            <p><strong>Remaining:</strong> <span id="remainingTasks">25</span></p>
+            <button class="button" id="taskButton" onclick="completeTask()">Complete Task</button>
+        </div>
+        <div class="footer">
+            <p>Created by <strong>Nahid Ahmed</strong></p>
+            <p>Contact me on <a href="https://t.me/nahidahmed01" target="_blank">@nahidahmed01</a></p>
+        </div>
+    </div>
+
+    <script>
+        let balance = parseFloat(localStorage.getItem("balance")) || 0;
+        let completedTasks = parseInt(localStorage.getItem("completedTasks")) || 0;
+        const taskLimit = 25;
+
+        document.getElementById("balance").textContent = balance.toFixed(2);
+        document.getElementById("completedTasks").textContent = completedTasks;
+        document.getElementById("remainingTasks").textContent = taskLimit - completedTasks;
+
+        function completeTask() {
+            if (completedTasks < taskLimit) {
+                completedTasks++;
+                balance += 0.2; // প্রতি টাস্কের জন্য 0.2 DGB যোগ হবে
+
+                localStorage.setItem("balance", balance);
+                localStorage.setItem("completedTasks", completedTasks);
+
+                document.getElementById("balance").textContent = balance.toFixed(2);
+                document.getElementById("completedTasks").textContent = completedTasks;
+                document.getElementById("remainingTasks").textContent = taskLimit - completedTasks;
+            } else {
+                alert("All tasks completed for today!");
+            }
+        }
+
+        // অ্যাডমিন থেকে রিসেট হলে সবার লোকাল স্টোরেজ রিসেট হবে
+        window.onload = function () {
+            if (localStorage.getItem("resetFlag") === "true") {
+                localStorage.setItem("resetFlag", "false");
+                completedTasks = 0;
+                balance = 0;
+
+                localStorage.setItem("balance", balance);
+                localStorage.setItem("completedTasks", completedTasks);
+
+                document.getElementById("balance").textContent = balance.toFixed(2);
+                document.getElementById("completedTasks").textContent = completedTasks;
+                document.getElementById("remainingTasks").textContent = taskLimit;
+
+                alert("Your tasks have been reset by the admin.");
+            }
+        };
+    </script>
+</body>
+</html>
