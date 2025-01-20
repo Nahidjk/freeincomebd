@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        h1 {
+            font-size: 30px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .balance {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 80px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 17px;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+        .button:hover, .butto:hover {
+            background: #45a049;
+        }
+        .timer {
+            font-size: 18px;
+            margin-top: 15px;
+            color: #333;
+        }
+        .footr {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+        }
+        .footr a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .footr a:hover {
+            text-decoration: underline;
+        }
+        .rules-box {
+            background: #fff;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            color: #FF4C4C;
+        }
+        .footer {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #f1f1f1;
+            padding: 15px 0;
+            border-top: 2px solid #ddd;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .footer-item {
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            flex: 1;
+        }
+        .footer-item .icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .footer-item:hover {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .footer-item .label {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="rules-box">
+            <h3 style="text-align: center;">Today's Tasks</h3>
+            <div class="balance">
+                <p>Total Tasks: <span id="totalTasks">0</span></p>
+                <p>Completed: <span id="completedTasks">0</span></p>
+                <p>Remaining: <span id="remainingTasks">0</span></p>
+            </div>
+            <!-- Task Buttons -->
+            <button class="button" id="completeTaskButton" onclick="completeTask(); watchAd();">Complete Task</button>
+            <button class="button" id="resetTaskButton" onclick="resetTasks()">Restart Tasks</button>
+            
+            <!-- Timer -->
+             <p class="timer" id="timerMessage"></p>
+        </div>
+        <div class="rules-box">
+            <h3>⚠️ There Are Some Rules ⚠️</h3>
+            <p>The Rules Are That After Clicking On Start Task, You Should Click On The Ad That Comes Up And You Must Wait For 15 to 16 Seconds Inside That Ad, It Is Mandatory. These Are The Rules.</p>
+        </div>
+        <div class="footr">
+            <p>Created by <strong>Nahid Ahmed</strong></p>
+            <p>Contact me on <a href="https://t.me/nahidahmed01" target="_blank">@nahidahmed01</a></p>
+        </div>
+    </div>
+    <p></p>
+    <div class="footer">
+        <a href="home.html" class="footer-item">
+            <div class="icon">🏠</div>
+            <div class="label">Home</div>
+        </a>
+        <a href="tasks.html" class="footer-item">
+            <div class="icon">📋</div>
+            <div class="label">Tasks</div>
+        </a>
+        <a href="withdraw.html" class="footer-item">
+            <div class="icon">💵</div>
+            <div class="label">Withdraw</div>
+        </a>
+    </div>
+    <script src="https://jagnaimsee.net/vignette.min.js" data-zone="8811435" data-sdk="show_8811435"></script>
+    <script>
+        let totalTasks = 25;
+        let completedTasks = parseInt(localStorage.getItem("completedTasks")) || 0;
+        let lastTaskTime = parseInt(localStorage.getItem("lastTaskTime")) || 0;
+        const taskLimit = 25;
+        let resetButtonEnabled = false;
+        const timerDuration = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const timerMessageEl = document.getElementById('timerMessage');
+        const resetTaskButton = document.getElementById('resetTaskButton');
+    
+        // Load saved data from localStorage
+        function loadFromStorage() {
+            totalTasks = 25;
+            completedTasks = parseInt(localStorage.getItem("completedTasks")) || 0;
+            const lastResetTime = parseInt(localStorage.getItem("lastResetTime")) || null;
+    
+            if (lastResetTime) {
+                const timeElapsed = Date.now() - lastResetTime;
+                if (timeElapsed >= timerDuration) {
+                    resetButtonEnabled = true;
+                    resetTaskButton.disabled = false;
+                } else {
+                    resetButtonEnabled = false;
+                    resetTaskButton.disabled = true;
+                    startTimer(timerDuration - timeElapsed);
+                }
+            } else {
+                resetButtonEnabled = true;
+                resetTaskButton.disabled = false;
+            }
+            updateDisplay();
+        }
+    
+        // Update display elements
+        function updateDisplay() {
+            document.getElementById("totalTasks").textContent = totalTasks;
+            document.getElementById("completedTasks").textContent = completedTasks;
+            document.getElementById("remainingTasks").textContent = totalTasks - completedTasks;
+        }
+    
+        // Start the timer countdown
+        function startTimer(duration) {
+            let timer = Math.floor(duration / 1000); // convert to seconds
+            const interval = setInterval(() => {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                timerMessageEl.textContent = `Next task available in: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                timer--;
+                
+                if (timer < 0) {
+                    clearInterval(interval);
+                    timerMessageEl.textContent = "Tasks can be restarted now!";
+                    resetButtonEnabled = true;
+                    resetTaskButton.disabled = false;
+                    saveToStorage();
+                }
+            }, 1000);
+        }
+    
+        // Save to localStorage
+        function saveToStorage() {
+            localStorage.setItem("completedTasks", completedTasks);
+            localStorage.setItem("lastResetTime", Date.now());
+        }
+    
+        // Complete task
+        function completeTask() {
+            if (completedTasks < totalTasks) {
+                completedTasks++;
+                updateDisplay();
+                saveToStorage();
+            } else {
+                alert("All tasks completed for today!");
+            }
+        }
+    
+        // Restart tasks
+        function resetTasks() {
+            if (!resetButtonEnabled) return;
+    
+            completedTasks = 0;
+            updateDisplay();
+            saveToStorage();
+    
+            // Start timer
+            resetButtonEnabled = false;
+            resetTaskButton.disabled = true;
+            startTimer(timerDuration);
+        }
+    
+        // Load data from localStorage when the page loads
+        loadFromStorage();
+    </script>
+    
+</body>
+</html>
