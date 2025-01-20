@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks Page</title>
+</head>
+<body>
+    <h1>Tasks Page</h1>
+    <p>Completed Tasks: <span id="completedTasks">0</span></p>
+    <p>Remaining Tasks: <span id="remainingTasks">25</span></p>
+    <button id="taskButton" onclick="completeTask()">Complete Task</button>
+    <script>
+let balance = parseFloat(localStorage.getItem("balance")) || 0;
+let completedTasks = parseInt(localStorage.getItem("completedTasks")) || 0;
+let todayEarnings = parseFloat(localStorage.getItem("todayEarnings")) || 0;
+let lifetimeEarnings = parseFloat(localStorage.getItem("lifetimeEarnings")) || 0;
+
+const taskLimit = 25;
+
+// Update Tasks Page DOM
+document.getElementById("completedTasks").textContent = completedTasks;
+document.getElementById("remainingTasks").textContent = taskLimit - completedTasks;
+
+// Function to complete a task
+function completeTask() {
+    if (completedTasks < taskLimit) {
+        completedTasks++;
+        balance += 0.2; // Add 0.2 DGB per task
+        todayEarnings += 0.2;
+        lifetimeEarnings += 0.2;
+
+        // Save updated data to localStorage
+        localStorage.setItem("balance", balance.toFixed(2));
+        localStorage.setItem("completedTasks", completedTasks);
+        localStorage.setItem("todayEarnings", todayEarnings.toFixed(2));
+        localStorage.setItem("lifetimeEarnings", lifetimeEarnings.toFixed(2));
+
+        // Update DOM
+        document.getElementById("completedTasks").textContent = completedTasks;
+        document.getElementById("remainingTasks").textContent = taskLimit - completedTasks;
+
+        // If all tasks are completed
+        if (completedTasks >= taskLimit) {
+            document.getElementById("taskButton").style.display = "none"; // Hide button
+            alert("Today's tasks are completed!");
+        }
+    } else {
+        alert("You have already completed all tasks for today!");
+    }
+}
+
+      
+    </script>
+</body>
+</html>
