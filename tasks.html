@@ -104,7 +104,7 @@
                 <p>Remaining: <span id="remainingTasks">0</span></p>
             </div>
             <!-- Task Buttons -->
-            <button class="button" id="completeTaskButton" onclick="watchAd(); completeTask();">Complete Task</button>
+            <button class="button" id="completeTaskButton" onclick="watchAd(); completeTask();">Start Task</button>
             <button class="button" id="resetTaskButton" onclick="resetTasks()">Restart Tasks</button>
             
             <!-- Timer -->
@@ -141,7 +141,7 @@
         let lastTaskTime = parseInt(localStorage.getItem("lastTaskTime")) || 0;
         const taskLimit = 25;
         let resetButtonEnabled = false;
-        const timerDuration = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const timerDuration = 12 * 60 * 60 * 1000; // 2 hours // 5 minutes in milliseconds
         const timerMessageEl = document.getElementById('timerMessage');
         const resetTaskButton = document.getElementById('resetTaskButton');
     
