@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 34px;
+            color: white;
+            text-align: centr;
+        }
+        h1 {
+            margin: 0 0 20px;
+            font-size: 28px;
+            color: #000000;
+        }
+        .balance {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 95%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+    <style>
+    .rules-box {
+    background: #fff;
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #FF4C4C;
+    }
+    .rules-bo {
+    background: #fff;
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    padding: 2px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #FF4C4C;
+    }
+    
+    
+    .rules-box h3, .rules-bo h3  {
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #FF4C4C;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    }
+    
+    .rules-box p, .rules-bo p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #333;
+    }
+    /* Footer Styling */
+    .footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 15px 0;
+    border-top: 2px solid #ddd;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .footer-item {
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    flex: 1;
+    }
+    
+    .footer-item .icon {
+    font-size: 22px;
+    margin-bottom: 5px;
+    }
+    
+    .footer-item:hover {
+    color: #007bff;
+    font-weight: bold;
+    }
+    
+    .footer-item .label {
+    font-size: 12px;
+    }
+    
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Withdraw</h1>
+        <div class="balance" style="color: #000000;">💰 Available Balance: DGB <span id="availableBalance">0.00</span></div>
+
+        <div class="form-group">
+            <label for="method" style="color: #000000;">Payment Method</label>
+            <select id="method">
+                <option value="PayPal">DGB</option>
+                
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="amount" style="color: #000000;">Amount</label>
+            <input type="number" id="amount" placeholder="Enter amount">
+        </div>
+
+        <div class="form-group" style="color: #000000;">
+            <label for="address">Wallet Address</label>
+            <input type="text" id="address" placeholder="Enter wallet address">
+        </div>
+
+        <div class="button-container">
+            <button onclick="submitWithdraw()">Submit Withdrawal</button>
+            <button onclick="goBack()">⬅️ Back</button>
+        </div>
+    
+    </div>
+    <div class="footer">
+    <a href="home.html" class="footer-item">
+    <div class="icon">🏠</div>
+    <div class="label">Home</div>
+    </a>
+    <a href="tasks.html" class="footer-item">
+    <div class="icon">📋</div>
+    <div class="label">Tasks</div>
+    </a>
+    <a href="withdraw.html" class="footer-item">
+    <div class="icon">💵</div>
+    <div class="label">Withdraw</div>
+    </a>
+    </div>
+    
+
+    <script>
+    const botToken = "7233487877:AAEfL184Kt4Q9jt_2CP7KqU0WGxWNR2R5_Y";
+    const chatId = "5776979420";
+
+    let balance = parseFloat(localStorage.getItem("balance")) || 0;
+    document.getElementById("availableBalance").textContent = balance.toFixed(2);
+
+    function submitWithdraw() {
+        const amount = parseFloat(document.getElementById("amount").value);
+        const method = document.getElementById("method").value;
+        const address = document.getElementById("address").value;
+
+        // Validation for amount
+        if (amount < 20) {
+            alert("The minimum withdrawal amount is 20!");
+        } else if (amount > 1000) {
+            alert("The maximum withdrawal amount is 1000!");
+        } else if (amount > balance) {
+            alert("Insufficient balance!");
+        } else if (!address) {
+            alert("Please enter an address!");
+        } else {
+            balance -= amount;
+            localStorage.setItem("balance", balance);
+            document.getElementById("availableBalance").textContent = balance.toFixed(2);
+
+            const message = `
+💵 *Withdrawal Request Submitted* 💵
+Amount: ${amount} DGB
+Method: ${method}
+Address: ${address}
+            `;
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: chatId, text: message }),
+            });
+            alert("Withdrawal request submitted!");
+        }
+    }
+
+    function goBack() {
+        // Replace this URL with the URL you want to navigate to
+        window.location.href = "index.html"; // Replace with the desired link
+    }
+</script>
+
+</body>
+</html>
