@@ -176,23 +176,28 @@
         }
     
         // Start the timer countdown
-        function startTimer(duration) {
-            let timer = Math.floor(duration / 1000); // convert to seconds
-            const interval = setInterval(() => {
-                const minutes = Math.floor(timer / 60);
-                const seconds = timer % 60;
-                timerMessageEl.textContent = `Next task available in: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-                timer--;
-                
-                if (timer < 0) {
-                    clearInterval(interval);
-                    timerMessageEl.textContent = "Tasks can be restarted now!";
-                    resetButtonEnabled = true;
-                    resetTaskButton.disabled = false;
-                    saveToStorage();
-                }
-            }, 1000);
+        const timerDuration = 1 * 60 * 60 * 1000; // Set to 1 hour
+
+function startTimer(duration) {
+    let timer = Math.floor(duration / 1000); // Convert to seconds
+    const interval = setInterval(() => {
+        const hours = Math.floor(timer / 3600); // Calculate hours
+        const minutes = Math.floor((timer % 3600) / 60); // Calculate minutes
+        const seconds = timer % 60; // Calculate seconds
+
+        timerMessageEl.textContent = `Next task available in: ${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        timer--;
+
+        if (timer < 0) {
+            clearInterval(interval);
+            timerMessageEl.textContent = "Tasks can be restarted now!";
+            resetButtonEnabled = true;
+            resetTaskButton.disabled = false;
+            saveToStorage();
         }
+    }, 1000);
+}
+
     
         // Save to localStorage
         function saveToStorage() {
