@@ -102,6 +102,7 @@
                 <p>Total Tasks: <span id="totalTasks">0</span></p>
                 <p>Completed: <span id="completedTasks">0</span></p>
                 <p>Remaining: <span id="remainingTasks">0</span></p>
+                <p>Balance: $<span id="balance">0.00</span></p> <!-- Added balance display -->
             </div>
             <!-- Task Buttons -->
             <button class="button" id="completeTaskButton" onclick="watchAd(); completeTask();">Start Task</button>
@@ -138,6 +139,7 @@
     <script>
         let totalTasks = 25;
         let completedTasks = parseInt(localStorage.getItem("completedTasks")) || 0;
+        let balance = parseFloat(localStorage.getItem("balance")) || 0.00; // Initialize balance
         let lastTaskTime = parseInt(localStorage.getItem("lastTaskTime")) || 0;
         const taskLimit = 25;
         let resetButtonEnabled = false;
@@ -149,6 +151,7 @@
         function loadFromStorage() {
             totalTasks = 25;
             completedTasks = parseInt(localStorage.getItem("completedTasks")) || 0;
+            balance = parseFloat(localStorage.getItem("balance")) || 0.00; // Load balance from storage
             const lastResetTime = parseInt(localStorage.getItem("lastResetTime")) || null;
     
             if (lastResetTime) {
@@ -173,34 +176,34 @@
             document.getElementById("totalTasks").textContent = totalTasks;
             document.getElementById("completedTasks").textContent = completedTasks;
             document.getElementById("remainingTasks").textContent = totalTasks - completedTasks;
+            document.getElementById("balance").textContent = balance.toFixed(2); // Update balance display
         }
     
         // Start the timer countdown
-        
-function startTimer(duration) {
-    let timer = Math.floor(duration / 1000); // Convert to seconds
-    const interval = setInterval(() => {
-        const hours = Math.floor(timer / 3600); // Calculate hours
-        const minutes = Math.floor((timer % 3600) / 60); // Calculate minutes
-        const seconds = timer % 60; // Calculate seconds
+        function startTimer(duration) {
+            let timer = Math.floor(duration / 1000); // Convert to seconds
+            const interval = setInterval(() => {
+                const hours = Math.floor(timer / 3600); // Calculate hours
+                const minutes = Math.floor((timer % 3600) / 60); // Calculate minutes
+                const seconds = timer % 60; // Calculate seconds
 
-        timerMessageEl.textContent = `Next task available in: ${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-        timer--;
+                timerMessageEl.textContent = `Next task available in: ${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                timer--;
 
-        if (timer < 0) {
-            clearInterval(interval);
-            timerMessageEl.textContent = "Tasks can be restarted now!";
-            resetButtonEnabled = true;
-            resetTaskButton.disabled = false;
-            saveToStorage();
+                if (timer < 0) {
+                    clearInterval(interval);
+                    timerMessageEl.textContent = "Tasks can be restarted now!";
+                    resetButtonEnabled = true;
+                    resetTaskButton.disabled = false;
+                    saveToStorage();
+                }
+            }, 1000);
         }
-    }, 1000);
-}
-
     
         // Save to localStorage
         function saveToStorage() {
             localStorage.setItem("completedTasks", completedTasks);
+            localStorage.setItem("balance", balance); // Save balance to localStorage
             localStorage.setItem("lastResetTime", Date.now());
         }
     
@@ -208,6 +211,7 @@ function startTimer(duration) {
         function completeTask() {
             if (completedTasks < totalTasks) {
                 completedTasks++;
+                balance += 0.2; // Add balance for each task completed
                 updateDisplay();
                 saveToStorage();
             } else {
@@ -220,6 +224,7 @@ function startTimer(duration) {
             if (!resetButtonEnabled) return;
     
             completedTasks = 0;
+            balance = 0.00; // Reset balance
             updateDisplay();
             saveToStorage();
     
@@ -233,20 +238,18 @@ function startTimer(duration) {
         loadFromStorage();
         
         function watchAd() {
-        if (typeof show_8811435 === 'function') {
-        show_8811435()
-        .then(() => {
-        console.log("Ad shown successfully.");
-        })
-        .catch((error) => {
-        console.error("Ad failed to load: ", error);
-        });
-        } else {
-        console.error("show_8811435 function is not available");
+            if (typeof show_8811435 === 'function') {
+                show_8811435()
+                .then(() => {
+                    console.log("Ad shown successfully.");
+                })
+                .catch((error) => {
+                    console.error("Ad failed to load: ", error);
+                });
+            } else {
+                console.error("show_8811435 function is not available");
+            }
         }
-        }
-        
-        
     </script>
     
 </body>
