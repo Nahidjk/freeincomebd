@@ -115,10 +115,7 @@
             <h3>⚠️ There Are Some Rules ⚠️</h3>
             <p>The Rules Are That After Clicking On Start Task, You Should Click On The Ad That Comes Up And You Must Wait For 15 to 16 Seconds Inside That Ad, It Is Mandatory. These Are The Rules.</p>
         </div>
-        <div class="footr">
-            <p>Created by <strong>Nahid Ahmed</strong></p>
-            <p>Contact me on <a href="https://t.me/nahidahmed01" target="_blank">@nahidahmed01</a></p>
-        </div>
+        
     </div>
     <p></p>
     <div class="footer">
@@ -143,7 +140,7 @@
         let lastTaskTime = parseInt(localStorage.getItem("lastTaskTime")) || 0;
         const taskLimit = 25;
         let resetButtonEnabled = false;
-        const timerDuration = 12 * 60 * 60 * 1000; // 2 hours // 5 minutes in milliseconds
+        const timerDuration = 0 * 0 * 1 * 1000; // 2 hours // 5 minutes in milliseconds
         const timerMessageEl = document.getElementById('timerMessage');
         const resetTaskButton = document.getElementById('resetTaskButton');
     
@@ -224,7 +221,7 @@
             if (!resetButtonEnabled) return;
     
             completedTasks = 0;
-            balance = 0.00; // Reset balance
+             // Reset balance
             updateDisplay();
             saveToStorage();
     
